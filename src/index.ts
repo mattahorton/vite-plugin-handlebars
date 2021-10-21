@@ -47,6 +47,12 @@ export default function handlebars({
     },
 
     async handleHotUpdate({ server, file }) {
+      if (reloadOnPartialChange) {
+        server.ws.send({
+          type: 'full-reload',
+        });
+      }
+
       if (reloadOnPartialChange && partialsSet.has(file)) {
         server.ws.send({
           type: 'full-reload',
