@@ -1,5 +1,5 @@
 {
-  "name": "vite-plugin-handlebars",
+  "name": "@glitchdotcom/vite-plugin-handlebars",
   "version": "1.6.0",
   "description": "Vite plugin for Handlebars support in HTML",
   "source": "src/index.ts",
@@ -8,12 +8,12 @@
   "files": [
     "dist"
   ],
-  "repository": "git@github.com:alexlafroscia/vite-plugin-handlebars.git",
-  "author": "Alex LaFroscia <alex@lafroscia.com>",
+  "repository": "https://github.com/glitchdotcom/vite-plugin-handlebars",
+  "author": "Alex LaFroscia <alex@lafroscia.com> | Keith Kurson <keith@glitch.com>",
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "microbundle -f es,cjs --target node --no-compress",
+    "build": "microbundle -f es,cjs --target node --no-compress --resolveJsonModule",
     "lint": "eslint .",
     "test": "jest",
     "release": "standard-version",

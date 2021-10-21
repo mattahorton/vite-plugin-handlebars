@@ -1,5 +1,6 @@
 import { compile, registerHelper, HelperDeclareSpec, RuntimeOptions } from 'handlebars';
 import { resolve } from 'path';
+import { readFile, FileHandle } from 'fs/promises';
 import { IndexHtmlTransformContext, Plugin as VitePlugin, normalizePath } from 'vite';
 import { Context, resolveContext } from './context';
 import { registerPartials } from './partials';
@@ -10,6 +11,7 @@ type CompileOptions = CompileArguments[1];
 export interface HandlebarsPluginConfig {
   context?: Context;
   reloadOnPartialChange?: boolean;
+  settingsFile: FileHandle;
   compileOptions?: CompileOptions;
   runtimeOptions?: RuntimeOptions;
   partialDirectory?: string | Array<string>;
@@ -17,13 +19,13 @@ export interface HandlebarsPluginConfig {
 }
 
 export default function handlebars({
-  context,
   reloadOnPartialChange = true,
+  settingsFile,
   compileOptions,
   runtimeOptions,
   partialDirectory,
   helpers,
-}: HandlebarsPluginConfig = {}): VitePlugin {
+}: HandlebarsPluginConfig): VitePlugin {
   // Keep track of what partials are registered
   const partialsSet = new Set<string>();
 
@@ -65,7 +67,18 @@ export default function handlebars({
 
         const template = compile(html, compileOptions);
 
-        const resolvedContext = await resolveContext(context, normalizePath(ctx.path));
+        // Lets load in the glitch settings.json
+        const settings = await readFile(settingsFile, 'utf-8');
+        let json;
+        try {
+          json = JSON.parse(settings.toString());
+        } catch (e) {
+          // There is an error in the JSON! Display the last known working version
+          // directly from the vite .cache
+          json = async () => import('../settings.json');
+        }
+
+        const resolvedContext = await resolveContext({ settings: json }, normalizePath(ctx.path));
         const result = template(resolvedContext, runtimeOptions);
 
         return result;
