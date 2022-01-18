@@ -1,6 +1,6 @@
 {
   "name": "@glitchdotcom/vite-plugin-handlebars",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Vite plugin for Handlebars support in HTML",
   "source": "src/index.ts",
   "main": "dist/index.js",
