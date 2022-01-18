@@ -7,6 +7,8 @@ export async function resolveContext(
   context: Context | undefined,
   pagePath: string
 ): Promise<Record<string, unknown> | undefined> {
+  console.log(pagePath);
+  console.log(typeof pagePath);
   if (typeof context === 'undefined') {
     return context;
   }
